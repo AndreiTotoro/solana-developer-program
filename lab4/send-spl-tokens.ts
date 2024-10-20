@@ -32,7 +32,7 @@ const receipentTokenAccount = await getOrCreateAssociatedTokenAccount(
   connection,
   user,
   tokenMintAccount,
-  source
+  receipent
 );
 
 const signature = await transfer(
@@ -41,7 +41,7 @@ const signature = await transfer(
   sourceTokenAccount.address,
   receipentTokenAccount.address,
   user,
-  10 * MINOR_UNITS_PER_MAJOR_UNITS
+  1 * MINOR_UNITS_PER_MAJOR_UNITS
 );
 
 const explorerLink = getExplorerLink("transaction", signature, "devnet");
