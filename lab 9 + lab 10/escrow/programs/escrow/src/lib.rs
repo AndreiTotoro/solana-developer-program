@@ -1,18 +1,19 @@
-use anchor_lang::prelude::*;
-
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
-
 pub mod constants;
+pub mod error;
 pub mod instructions;
 pub mod state;
 
-use instructions::*;
-use state::*;
+use anchor_lang::prelude::*;
+
+pub use constants::*;
+pub use instructions::*;
+pub use state::*;
+
+declare_id!("5t4VUyKcAiNLTtncURx62nG9uJ7XFfTjyRLzczo12mSy");
 
 #[program]
 pub mod escrow {
     use super::*;
-
     pub fn make_offer(
         context: Context<MakeOffer>,
         id: u64,
