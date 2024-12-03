@@ -1,16 +1,12 @@
 use anchor_lang::prelude::*;
-// Our program's address!
-// This matches the key in the target/deploy directory
-declare_id!("7T6wupi3AWVYYi6gsMwjp6SVbvnhH4PfshDaq3RM5ZW2");
 
-// Anchor programs always use 8 bits for the discriminator
+declare_id!("CCijkp5iVaa8QW6tqWFncYa8Ee6Fy211JKQDvL7JehVj");
+
 pub const ANCHOR_DISCRIMINATOR_SIZE: usize = 8;
 
-// Our Solana program!
 #[program]
 pub mod favorites {
     use super::*;
-
     // Our instruction handler! It sets the user's favorite number and color
     pub fn set_favorites(
         context: Context<SetFavorites>,
@@ -21,9 +17,7 @@ pub mod favorites {
         let user_public_key = context.accounts.user.key();
         msg!("Greetings from {}", context.program_id);
         msg!("User {user_public_key}'s favorite number is {number}, favorite color is: {color}",);
-
         msg!("User's hobbies are: {:?}", hobbies);
-
         context.accounts.favorites.set_inner(Favorites {
             number,
             color,
@@ -31,35 +25,29 @@ pub mod favorites {
         });
         Ok(())
     }
-
     // We can also add a get_favorites instruction handler to return the user's favorite number and color
 }
 
-// What we will put inside the Favorites PDA
 #[account]
 #[derive(InitSpace)]
 pub struct Favorites {
     pub number: u64,
-
     #[max_len(50)]
     pub color: String,
-
     #[max_len(5, 50)]
     pub hobbies: Vec<String>,
 }
-// When people call the set_favorites instruction, they will need to provide the accounts that will be modifed. This keeps Solana fast!
+
 #[derive(Accounts)]
 pub struct SetFavorites<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
-
     #[account(
-        init_if_needed, 
-        payer = user, 
-        space = ANCHOR_DISCRIMINATOR_SIZE + Favorites::INIT_SPACE, 
-        seeds=[b"favorites", user.key().as_ref()],
-    bump)]
+init,
+payer = user,
+space = ANCHOR_DISCRIMINATOR_SIZE + Favorites::INIT_SPACE,
+seeds=[b"favorites", user.key().as_ref()],
+bump)]
     pub favorites: Account<'info, Favorites>,
-
     pub system_program: Program<'info, System>,
 }
